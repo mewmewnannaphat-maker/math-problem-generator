@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สไลด์สอน: อาณาจักรนักสร้างโจทย์</title>
+    <!-- โหลด Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800;900&display=swap');
+        
+        body { 
+            font-family: 'Kanit', sans-serif; 
+            background: linear-gradient(135deg, #fdf2f8 0%, #f3e8ff 100%);
+            background-image: radial-gradient(#fbcfe8 4px, transparent 4px), radial-gradient(#fbcfe8 4px, transparent 4px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            overflow: hidden; 
+        }
+        
+        .slide { display: none; }
+        .slide.active { 
+            display: flex; 
+            animation: jellyPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+        }
+        
+        @keyframes jellyPop { 
+            0% { opacity: 0; transform: scale(0.8) translateY(30px); } 
+            50% { transform: scale(1.02) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+        
+        /* เอาความเอียงออกจากของตกแต่งที่ลอยไปมา ให้ลอยขึ้นลงตรงๆ */
+        .floating-slow { animation: float 4s ease-in-out infinite; }
+        .floating-fast { animation: float 2.5s ease-in-out infinite reverse; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* ปุ่มแบบ 3 มิติ (เอา rotate ออก) */
+        .choice-btn { 
+            transition: all 0.15s ease; 
+            border-bottom-width: 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .choice-btn:hover { transform: scale(1.05) translateY(-2px); }
+        .choice-btn:active { 
+            border-bottom-width: 0px; 
+            transform: translateY(6px); 
+            box-shadow: none;
+        }
+        
+        .choice-btn.selected { 
+            background: linear-gradient(180deg, #fffbeb 0%, #fef08a 100%) !important;
+            border-color: #eab308 !important;
+            color: #854d0e !important;
+            transform: scale(1.05);
+            border-bottom-width: 6px;
+            box-shadow: 0 10px 25px -5px rgba(234, 179, 8, 0.5);
+        }
+
+        .cute-box {
+            background: white;
+            border: 6px solid #fb7185;
+            border-radius: 2.5rem;
+            box-shadow: 0px 10px 0px #f43f5e;
+            position: relative;
+        }
+
+        .cute-cloud {
+            background: white;
+            border: 6px solid #38bdf8;
+            border-radius: 50px;
+            box-shadow: 0px 8px 0px #0ea5e9;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col font-sans select-none text-gray-800">
+
+    <!-- ของตกแต่งลอยไปมาฉากหลัง -->
+    <div class="fixed top-10 left-10 text-6xl floating-slow opacity-60 z-0">☁️</div>
+    <div class="fixed top-20 right-20 text-5xl floating-fast opacity-60 z-0">✨</div>
+    <div class="fixed bottom-32 left-20 text-5xl floating-fast opacity-60 z-0">💖</div>
+    <div class="fixed bottom-20 right-32 text-6xl floating-slow opacity-60 z-0">🎈</div>
+
+    <!-- พื้นที่แสดงสไลด์ -->
+    <div class="flex-1 w-full flex flex-col items-center justify-center relative overflow-hidden pb-20 pt-2 z-10" id="slide-container">
+        
+        <!-- สไลด์ 0: หน้าปก -->
+        <div class="slide active flex-col items-center justify-center w-full max-w-6xl mx-auto px-4" id="slide-0">
+            <div class="flex items-center gap-4 mb-2">
+                <div class="text-[6rem] floating-fast">🎀</div>
+                <div class="text-[7rem] floating-slow">🏰</div>
+                <div class="text-[6rem] floating-fast">🧸</div>
+            </div>
+            <h1 class="text-[6.5rem] font-black text-transparent bg-clip-text bg-gradient-to-b from-pink-400 to-purple-600 mb-2 drop-shadow-lg" style="-webkit-text-stroke: 3px white;">อาณาจักรนักสร้างโจทย์</h1>
+            <div class="cute-cloud px-10 py-5 mt-4 max-w-3xl mx-auto bg-sky-50">
+                <h2 class="text-4xl font-bold text-sky-600 text-center">มาสนุกกับการแต่งเรื่องราวการคูณกันเถอะ! ✨</h2>
+            </div>
+        </div>
+
+        <!-- สไลด์ 1: ทบทวนส่วนประกอบ (โจทย์บอก) -->
+        <div class="slide flex-col items-center justify-center w-full max-w-6xl mx-auto px-4" id="slide-1">
+            <h2 class="text-5xl font-black text-white bg-blue-500 px-10 py-3 rounded-full border-4 border-white shadow-lg mb-8">ส่วนที่ 1: สิ่งที่โจทย์บอก 🎁</h2>
+            <div class="cute-box p-10 border-blue-400 bg-blue-50 w-full max-w-4xl flex items-center gap-8 border-b-[10px] shadow-blue-300">
+                <div class="text-[7rem] floating-slow">📝</div>
+                <div>
+                    <h3 class="text-4xl font-black text-blue-600 mb-3">เล่าเรื่องราว + ให้ตัวเลข</h3>
+                    <p class="text-3xl font-bold text-gray-600 leading-relaxed">
+                        เช่น <span class="bg-white px-4 py-1 rounded-2xl border-4 border-blue-200 shadow-sm inline-block">แม่ซื้อโดนัท <span class="text-red-500 text-4xl">4</span> กล่อง</span><br>
+                        <span class="bg-white px-4 py-1 rounded-2xl border-4 border-blue-200 mt-2 shadow-sm inline-block">กล่องละ <span class="text-red-500 text-4xl">6</span> ชิ้น</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 2: ทบทวนส่วนประกอบ (โจทย์ถาม) -->
+        <div class="slide flex-col items-center justify-center w-full max-w-6xl mx-auto px-4" id="slide-2">
+            <h2 class="text-5xl font-black text-white bg-orange-500 px-10 py-3 rounded-full border-4 border-white shadow-lg mb-8">ส่วนที่ 2: สิ่งที่โจทย์ถาม ❓</h2>
+            <div class="cute-box p-10 border-orange-400 bg-orange-50 w-full max-w-4xl flex items-center gap-8 border-b-[10px] shadow-orange-300">
+                <div class="text-[7rem] floating-fast">🕵️‍♂️</div>
+                <div>
+                    <h3 class="text-4xl font-black text-orange-600 mb-3">หาสิ่งที่ซ่อนอยู่ (คำถาม)</h3>
+                    <p class="text-3xl font-bold text-gray-600 leading-relaxed">
+                        มักจะมีคำว่า <span class="text-green-600 font-black text-4xl">"กี่"</span> หรือ <span class="text-green-600 font-black text-4xl">"เท่าไร"</span><br>
+                        เช่น <span class="bg-white px-4 py-1 rounded-2xl border-4 border-orange-200 mt-3 shadow-sm inline-block">แม่มีโดนัททั้งหมด <span class="text-pink-500 underline decoration-wavy decoration-pink-300">กี่ชิ้น?</span></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 3: เกมตามหาสิ่งที่หายไป -->
+        <div class="slide flex-col items-center justify-center w-full max-w-6xl mx-auto px-4" id="slide-3">
+            <h2 class="text-4xl font-black text-purple-600 mb-4 bg-white px-8 py-2 rounded-full border-4 border-purple-300 shadow-sm">🕵️ เกม: ตามหาสิ่งที่หายไป!</h2>
+            <div class="cute-box border-purple-400 bg-purple-50 p-8 w-full max-w-4xl text-left border-b-[8px] shadow-purple-300">
+                <p class="text-4xl font-bold leading-loose text-gray-700">
+                    "ครูมีดินสอ <span class="text-red-500 text-5xl">5</span> กล่อง กล่องละ <span class="text-red-500 text-5xl">12</span> แท่ง ......"
+                </p>
+                <div class="mt-4 pt-4 border-t-4 border-dashed border-purple-300">
+                    <p class="text-3xl font-bold text-purple-600 mb-4">ข้อไหนคือ <span class="bg-white px-3 py-1 rounded-xl shadow-sm">"สิ่งที่โจทย์ถาม"</span> ที่ถูกต้องที่สุด?</p>
+                    <div class="flex flex-col gap-3">
+                        <div class="bg-white border-4 border-gray-200 p-3 rounded-2xl text-2xl font-bold text-gray-400">A. ดินสอกล่องนี้สีอะไร?</div>
+                        <div class="bg-green-100 border-4 border-green-400 p-3 rounded-2xl text-3xl font-black text-green-700 shadow-md transform scale-[1.02]">B. ครูมีดินสอทั้งหมดกี่แท่ง? ✅</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 4: ลักษณะนามมหาสนุก -->
+        <div class="slide flex-col items-center justify-center w-full max-w-6xl mx-auto px-4" id="slide-4">
+            <h2 class="text-4xl font-black text-pink-500 mb-6 bg-white px-8 py-3 rounded-full border-4 border-pink-300 shadow-sm">✨ รู้หรือไม่? ของแต่ละอย่างเรียกไม่เหมือนกันนะ</h2>
+            <div class="grid grid-cols-2 gap-6 w-full max-w-4xl">
+                <div class="cute-box border-blue-400 p-4 flex items-center gap-4 border-b-[6px] shadow-blue-300">
+                    <div class="text-[4rem]">📘</div>
+                    <div class="text-3xl font-bold text-gray-600">สมุด เรียกว่า <span class="text-blue-600 font-black text-4xl">เล่ม</span></div>
+                </div>
+                <div class="cute-box border-yellow-400 p-4 flex items-center gap-4 border-b-[6px] shadow-yellow-400">
+                    <div class="text-[4rem]">✏️</div>
+                    <div class="text-3xl font-bold text-gray-600">ดินสอ เรียกว่า <span class="text-yellow-600 font-black text-4xl">แท่ง</span></div>
+                </div>
+                <div class="cute-box border-red-400 p-4 flex items-center gap-4 border-b-[6px] shadow-red-300">
+                    <div class="text-[4rem]">🍎</div>
+                    <div class="text-3xl font-bold text-gray-600">แอปเปิล เรียกว่า <span class="text-red-500 font-black text-4xl">ผล/ลูก</span></div>
+                </div>
+                <div class="cute-box border-pink-400 p-4 flex items-center gap-4 border-b-[6px] shadow-pink-300">
+                    <div class="text-[4rem]">🍬</div>
+                    <div class="text-3xl font-bold text-gray-600">ลูกอม เรียกว่า <span class="text-pink-500 font-black text-4xl">เม็ด</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 5: ฝึกแต่งโจทย์ตัวอย่าง -->
+        <div class="slide flex-col items-center justify-center w-full max-w-6xl mx-auto px-4" id="slide-5">
+            <h2 class="text-4xl font-black text-teal-600 mb-4 bg-teal-100 px-8 py-2 rounded-full border-4 border-teal-300 shadow-sm">ลองฝึกแต่งโจทย์ (ตัวอย่าง) 📝</h2>
+            <div class="flex items-center gap-6 mb-4 bg-white px-8 py-2 rounded-[2rem] border-4 border-teal-200 shadow-md">
+                <span class="text-5xl font-black text-blue-500">5</span>
+                <span class="text-4xl text-gray-400 font-bold">X</span>
+                <span class="text-5xl font-black text-red-500">20</span>
+            </div>
+            <div class="cute-box border-teal-400 p-8 w-full max-w-4xl bg-white text-left text-3xl leading-[1.8] border-b-[8px] shadow-teal-300">
+                <span class="font-bold text-teal-600 bg-teal-50 px-4 py-1 rounded-xl border-2 border-teal-100">ย่าซื้อไข่ไก่</span> จำนวน <span class="text-5xl font-black text-pink-500 mx-2">5</span> แผง<br>
+                แต่ละแผงมี <span class="text-5xl font-black text-pink-500 mx-2">20</span> ฟอง<br>
+                <div class="mt-4 pt-4 border-t-4 border-dashed border-gray-200">
+                    <span class="text-orange-600 font-bold bg-orange-50 px-5 py-2 rounded-2xl border-2 border-orange-100 shadow-sm inline-block">❓ ย่ามีไข่ไก่ทั้งหมดกี่ฟอง?</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 6: เข้าสู่เกมแต่งโจทย์ 6 ข้อ -->
+        <div class="slide flex-col items-center justify-center w-full max-w-6xl mx-auto px-4" id="slide-6">
+            <div class="flex gap-4">
+                <div class="text-[6rem] mb-4 floating-fast">🎮</div><div class="text-[6rem] mb-4 floating-slow">🧩</div>
+            </div>
+            <h2 class="text-5xl font-black text-blue-600 mb-4 bg-white px-10 py-4 rounded-[2rem] border-4 border-blue-300 shadow-lg transform scale-105">ภารกิจใหญ่: ตาพวกเราแต่งโจทย์ 6 ข้อ!</h2>
+            <p class="text-3xl font-bold text-pink-500 mb-4 bg-pink-50 px-6 py-2 rounded-full border-2 border-pink-200">พร้อมกันหรือยัง? ลุยเลย! 🚀</p>
+        </div>
+
+        <!-- ================= วงจรภารกิจ 6 ข้อ ================= -->
+        
+        <!-- สไลด์ 7: ภารกิจที่ 1 -->
+        <div class="slide flex-col items-center justify-center w-full max-w-5xl mx-auto px-4" id="slide-7">
+            <h2 class="text-3xl font-black text-blue-600 mb-3 bg-blue-100 px-6 py-1 rounded-full border-4 border-blue-300 inline-block shadow-sm">ภารกิจที่ 1: <span class="text-red-500 text-4xl mx-2">12</span> x <span class="text-red-500 text-4xl mx-2">24</span></h2>
+            
+            <div class="cute-box p-6 w-full bg-white text-left text-3xl leading-[1.8] border-b-[8px] shadow-blue-300 mb-4 border-blue-400">
+                <span id="m1-actor" class="font-black text-purple-600 bg-purple-50 px-3 py-1 rounded-xl border-2 border-purple-200">___</span> ซื้อ 
+                <span id="m1-item" class="font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-xl border-2 border-blue-200">___</span> จำนวน 
+                <span class="font-black text-red-500 text-[3rem] mx-2">12</span> 
+                <span id="m1-container1" class="font-black text-orange-500 underline decoration-dashed decoration-orange-300">___</span> <br>
+                แต่ละ<span id="m1-container2" class="font-black text-orange-500">___</span> มี 
+                <span class="font-black text-red-500 text-[3rem] mx-2">24</span> 
+                <span id="m1-class1" class="font-black text-green-600 underline decoration-dashed decoration-green-300">___</span> <br>
+                <div class="mt-3 pt-3 border-t-[4px] border-dotted border-gray-300">
+                    ❓ <span id="m1-actor2">เขา</span> มี<span id="m1-item2">ของ</span>ทั้งหมดกี่<span id="m1-class2" class="underline decoration-pink-300">___</span>?
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 w-full">
+                <div class="bg-purple-50 p-4 rounded-3xl border-4 border-purple-200 shadow-sm">
+                    <h3 class="text-xl font-black text-purple-500 mb-2 text-center">1. ใคร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(1, 'actor', 'พ่อ', null, this)" class="btn-m1-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👨 พ่อ</button>
+                        <button onclick="setM(1, 'actor', 'พี่สาว', null, this)" class="btn-m1-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👧 พี่สาว</button>
+                        <button onclick="setM(1, 'actor', 'ครู', null, this)" class="btn-m1-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👨‍🏫 ครู</button>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-3xl border-4 border-blue-200 shadow-sm">
+                    <h3 class="text-xl font-black text-blue-500 mb-2 text-center">2. ซื้ออะไร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(1, 'item', 'ดินสอ', 'แท่ง', this)" class="btn-m1-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">✏️ ดินสอ</button>
+                        <button onclick="setM(1, 'item', 'แอปเปิล', 'ผล', this)" class="btn-m1-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🍎 แอปเปิล</button>
+                        <button onclick="setM(1, 'item', 'ลูกอม', 'เม็ด', this)" class="btn-m1-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🍬 ลูกอม</button>
+                    </div>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-3xl border-4 border-orange-200 shadow-sm">
+                    <h3 class="text-xl font-black text-orange-500 mb-2 text-center">3. ใส่ในไหน?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(1, 'container', 'กล่อง', null, this)" class="btn-m1-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">📦 กล่อง</button>
+                        <button onclick="setM(1, 'container', 'ถุง', null, this)" class="btn-m1-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🛍️ ถุง</button>
+                        <button onclick="setM(1, 'container', 'ตะกร้า', null, this)" class="btn-m1-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🧺 ตะกร้า</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 8: ภารกิจที่ 2 -->
+        <div class="slide flex-col items-center justify-center w-full max-w-5xl mx-auto px-4" id="slide-8">
+            <h2 class="text-3xl font-black text-pink-600 mb-3 bg-pink-100 px-6 py-1 rounded-full border-4 border-pink-300 inline-block shadow-sm">ภารกิจที่ 2: <span class="text-red-500 text-4xl mx-2">9</span> x <span class="text-red-500 text-4xl mx-2">15</span></h2>
+            
+            <div class="cute-box p-6 w-full bg-white text-left text-3xl leading-[1.8] border-b-[8px] shadow-pink-300 mb-4 border-pink-400">
+                <span id="m2-actor" class="font-black text-purple-600 bg-purple-50 px-3 py-1 rounded-xl border-2 border-purple-200">___</span> ซื้อ 
+                <span id="m2-item" class="font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-xl border-2 border-blue-200">___</span> จำนวน 
+                <span class="font-black text-red-500 text-[3rem] mx-2">9</span> 
+                <span id="m2-container1" class="font-black text-orange-500 underline decoration-dashed decoration-orange-300">___</span> <br>
+                แต่ละ<span id="m2-container2" class="font-black text-orange-500">___</span> มี 
+                <span class="font-black text-red-500 text-[3rem] mx-2">15</span> 
+                <span id="m2-class1" class="font-black text-green-600 underline decoration-dashed decoration-green-300">___</span> <br>
+                <div class="mt-3 pt-3 border-t-[4px] border-dotted border-gray-300">
+                    ❓ <span id="m2-actor2">เขา</span> มี<span id="m2-item2">ของ</span>ทั้งหมดกี่<span id="m2-class2" class="underline decoration-pink-300">___</span>?
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 w-full">
+                <div class="bg-purple-50 p-4 rounded-3xl border-4 border-purple-200 shadow-sm">
+                    <h3 class="text-xl font-black text-purple-500 mb-2 text-center">1. ใคร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(2, 'actor', 'แม่', null, this)" class="btn-m2-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👩 แม่</button>
+                        <button onclick="setM(2, 'actor', 'ปู่', null, this)" class="btn-m2-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👴 ปู่</button>
+                        <button onclick="setM(2, 'actor', 'ฉัน', null, this)" class="btn-m2-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">🧒 ฉัน</button>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-3xl border-4 border-blue-200 shadow-sm">
+                    <h3 class="text-xl font-black text-blue-500 mb-2 text-center">2. ซื้ออะไร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(2, 'item', 'สมุด', 'เล่ม', this)" class="btn-m2-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">📘 สมุด</button>
+                        <button onclick="setM(2, 'item', 'ยางลบ', 'ก้อน', this)" class="btn-m2-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🧼 ยางลบ</button>
+                        <button onclick="setM(2, 'item', 'โดนัท', 'ชิ้น', this)" class="btn-m2-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🍩 โดนัท</button>
+                    </div>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-3xl border-4 border-orange-200 shadow-sm">
+                    <h3 class="text-xl font-black text-orange-500 mb-2 text-center">3. ใส่ในไหน?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(2, 'container', 'แพ็ค', null, this)" class="btn-m2-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">📦 แพ็ค</button>
+                        <button onclick="setM(2, 'container', 'โหล', null, this)" class="btn-m2-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🫙 โหล</button>
+                        <button onclick="setM(2, 'container', 'ถุง', null, this)" class="btn-m2-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🛍️ ถุง</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 9: ภารกิจที่ 3 -->
+        <div class="slide flex-col items-center justify-center w-full max-w-5xl mx-auto px-4" id="slide-9">
+            <h2 class="text-3xl font-black text-green-600 mb-3 bg-green-100 px-6 py-1 rounded-full border-4 border-green-300 inline-block shadow-sm">ภารกิจที่ 3: <span class="text-red-500 text-4xl mx-2">7</span> x <span class="text-red-500 text-4xl mx-2">30</span></h2>
+            
+            <div class="cute-box p-6 w-full bg-white text-left text-3xl leading-[1.8] border-b-[8px] shadow-green-300 mb-4 border-green-400">
+                <span id="m3-actor" class="font-black text-purple-600 bg-purple-50 px-3 py-1 rounded-xl border-2 border-purple-200">___</span> ซื้อ 
+                <span id="m3-item" class="font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-xl border-2 border-blue-200">___</span> จำนวน 
+                <span class="font-black text-red-500 text-[3rem] mx-2">7</span> 
+                <span id="m3-container1" class="font-black text-orange-500 underline decoration-dashed decoration-orange-300">___</span> <br>
+                แต่ละ<span id="m3-container2" class="font-black text-orange-500">___</span> มี 
+                <span class="font-black text-red-500 text-[3rem] mx-2">30</span> 
+                <span id="m3-class1" class="font-black text-green-600 underline decoration-dashed decoration-green-300">___</span> <br>
+                <div class="mt-3 pt-3 border-t-[4px] border-dotted border-gray-300">
+                    ❓ <span id="m3-actor2">เขา</span> มี<span id="m3-item2">ของ</span>ทั้งหมดกี่<span id="m3-class2" class="underline decoration-pink-300">___</span>?
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 w-full">
+                <div class="bg-purple-50 p-4 rounded-3xl border-4 border-purple-200 shadow-sm">
+                    <h3 class="text-xl font-black text-purple-500 mb-2 text-center">1. ใคร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(3, 'actor', 'ตา', null, this)" class="btn-m3-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👴 ตา</button>
+                        <button onclick="setM(3, 'actor', 'เพื่อน', null, this)" class="btn-m3-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👦 เพื่อน</button>
+                        <button onclick="setM(3, 'actor', 'น้า', null, this)" class="btn-m3-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👩 น้า</button>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-3xl border-4 border-blue-200 shadow-sm">
+                    <h3 class="text-xl font-black text-blue-500 mb-2 text-center">2. ซื้ออะไร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(3, 'item', 'ของเล่น', 'ชิ้น', this)" class="btn-m3-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🧸 ของเล่น</button>
+                        <button onclick="setM(3, 'item', 'ส้ม', 'ผล', this)" class="btn-m3-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🍊 ส้ม</button>
+                        <button onclick="setM(3, 'item', 'ปากกา', 'ด้าม', this)" class="btn-m3-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🖊️ ปากกา</button>
+                    </div>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-3xl border-4 border-orange-200 shadow-sm">
+                    <h3 class="text-xl font-black text-orange-500 mb-2 text-center">3. ใส่ในไหน?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(3, 'container', 'ลัง', null, this)" class="btn-m3-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">📦 ลัง</button>
+                        <button onclick="setM(3, 'container', 'กล่อง', null, this)" class="btn-m3-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🎁 กล่อง</button>
+                        <button onclick="setM(3, 'container', 'ถุง', null, this)" class="btn-m3-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🛍️ ถุง</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 10: ภารกิจที่ 4 -->
+        <div class="slide flex-col items-center justify-center w-full max-w-5xl mx-auto px-4" id="slide-10">
+            <h2 class="text-3xl font-black text-orange-600 mb-3 bg-orange-100 px-6 py-1 rounded-full border-4 border-orange-300 inline-block shadow-sm">ภารกิจที่ 4: <span class="text-red-500 text-4xl mx-2">11</span> x <span class="text-red-500 text-4xl mx-2">45</span></h2>
+            
+            <div class="cute-box p-6 w-full bg-white text-left text-3xl leading-[1.8] border-b-[8px] shadow-orange-300 mb-4 border-orange-400">
+                <span id="m4-actor" class="font-black text-purple-600 bg-purple-50 px-3 py-1 rounded-xl border-2 border-purple-200">___</span> ซื้อ 
+                <span id="m4-item" class="font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-xl border-2 border-blue-200">___</span> จำนวน 
+                <span class="font-black text-red-500 text-[3rem] mx-2">11</span> 
+                <span id="m4-container1" class="font-black text-orange-500 underline decoration-dashed decoration-orange-300">___</span> <br>
+                แต่ละ<span id="m4-container2" class="font-black text-orange-500">___</span> มี 
+                <span class="font-black text-red-500 text-[3rem] mx-2">45</span> 
+                <span id="m4-class1" class="font-black text-green-600 underline decoration-dashed decoration-green-300">___</span> <br>
+                <div class="mt-3 pt-3 border-t-[4px] border-dotted border-gray-300">
+                    ❓ <span id="m4-actor2">เขา</span> มี<span id="m4-item2">ของ</span>ทั้งหมดกี่<span id="m4-class2" class="underline decoration-pink-300">___</span>?
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 w-full">
+                <div class="bg-purple-50 p-4 rounded-3xl border-4 border-purple-200 shadow-sm">
+                    <h3 class="text-xl font-black text-purple-500 mb-2 text-center">1. ใคร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(4, 'actor', 'ยาย', null, this)" class="btn-m4-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👵 ยาย</button>
+                        <button onclick="setM(4, 'actor', 'ลุง', null, this)" class="btn-m4-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👨‍🦰 ลุง</button>
+                        <button onclick="setM(4, 'actor', 'ป้า', null, this)" class="btn-m4-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👩‍🦱 ป้า</button>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-3xl border-4 border-blue-200 shadow-sm">
+                    <h3 class="text-xl font-black text-blue-500 mb-2 text-center">2. ซื้ออะไร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(4, 'item', 'ไข่ไก่', 'ฟอง', this)" class="btn-m4-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🥚 ไข่ไก่</button>
+                        <button onclick="setM(4, 'item', 'ขนม', 'ชิ้น', this)" class="btn-m4-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🍘 ขนม</button>
+                        <button onclick="setM(4, 'item', 'น้ำผลไม้', 'ขวด', this)" class="btn-m4-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🧃 น้ำผลไม้</button>
+                    </div>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-3xl border-4 border-orange-200 shadow-sm">
+                    <h3 class="text-xl font-black text-orange-500 mb-2 text-center">3. ใส่ในไหน?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(4, 'container', 'แผง', null, this)" class="btn-m4-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🟫 แผง</button>
+                        <button onclick="setM(4, 'container', 'ถุง', null, this)" class="btn-m4-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🛍️ ถุง</button>
+                        <button onclick="setM(4, 'container', 'ลัง', null, this)" class="btn-m4-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">📦 ลัง</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 11: ภารกิจที่ 5 (ข้อใบงาน) -->
+        <div class="slide flex-col items-center justify-center w-full max-w-5xl mx-auto px-4" id="slide-11">
+            <h2 class="text-3xl font-black text-teal-600 mb-3 bg-teal-100 px-6 py-1 rounded-full border-4 border-teal-300 inline-block shadow-sm">ภารกิจที่ 5: <span class="text-red-500 text-4xl mx-2">15</span> x <span class="text-red-500 text-4xl mx-2">20</span></h2>
+            
+            <div class="cute-box p-6 w-full bg-white text-left text-3xl leading-[1.8] border-b-[8px] shadow-teal-300 mb-4 border-teal-400">
+                <span id="m5-actor" class="font-black text-purple-600 bg-purple-50 px-3 py-1 rounded-xl border-2 border-purple-200">___</span> ซื้อ 
+                <span id="m5-item" class="font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-xl border-2 border-blue-200">___</span> จำนวน 
+                <span class="font-black text-red-500 text-[3rem] mx-2">15</span> 
+                <span id="m5-container1" class="font-black text-orange-500 underline decoration-dashed decoration-orange-300">___</span> <br>
+                แต่ละ<span id="m5-container2" class="font-black text-orange-500">___</span> มี 
+                <span class="font-black text-red-500 text-[3rem] mx-2">20</span> 
+                <span id="m5-class1" class="font-black text-green-600 underline decoration-dashed decoration-green-300">___</span> <br>
+                <div class="mt-3 pt-3 border-t-[4px] border-dotted border-gray-300">
+                    ❓ <span id="m5-actor2">เขา</span> มี<span id="m5-item2">ของ</span>ทั้งหมดกี่<span id="m5-class2" class="underline decoration-pink-300">___</span>?
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 w-full">
+                <div class="bg-purple-50 p-4 rounded-3xl border-4 border-purple-200 shadow-sm">
+                    <h3 class="text-xl font-black text-purple-500 mb-2 text-center">1. ใคร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(5, 'actor', 'ครู', null, this)" class="btn-m5-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👨‍🏫 ครู</button>
+                        <button onclick="setM(5, 'actor', 'ฉัน', null, this)" class="btn-m5-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">🧒 ฉัน</button>
+                        <button onclick="setM(5, 'actor', 'แม่', null, this)" class="btn-m5-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👩 แม่</button>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-3xl border-4 border-blue-200 shadow-sm">
+                    <h3 class="text-xl font-black text-blue-500 mb-2 text-center">2. ซื้ออะไร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(5, 'item', 'หนังสือ', 'เล่ม', this)" class="btn-m5-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">📚 หนังสือ</button>
+                        <button onclick="setM(5, 'item', 'สีเทียน', 'แท่ง', this)" class="btn-m5-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🖍️ สีเทียน</button>
+                        <button onclick="setM(5, 'item', 'ลูกอม', 'เม็ด', this)" class="btn-m5-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🍬 ลูกอม</button>
+                    </div>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-3xl border-4 border-orange-200 shadow-sm">
+                    <h3 class="text-xl font-black text-orange-500 mb-2 text-center">3. ใส่ในไหน?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(5, 'container', 'กล่อง', null, this)" class="btn-m5-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">📦 กล่อง</button>
+                        <button onclick="setM(5, 'container', 'แถว', null, this)" class="btn-m5-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🛤️ แถว</button>
+                        <button onclick="setM(5, 'container', 'ถุง', null, this)" class="btn-m5-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🛍️ ถุง</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- สไลด์ 12: ภารกิจที่ 6 (ข้อพิเศษเพิ่มใหม่) -->
+        <div class="slide flex-col items-center justify-center w-full max-w-5xl mx-auto px-4" id="slide-12">
+            <h2 class="text-3xl font-black text-indigo-600 mb-3 bg-indigo-100 px-6 py-1 rounded-full border-4 border-indigo-300 inline-block shadow-sm">ภารกิจที่ 6 (บอสใหญ่!): <span class="text-red-500 text-4xl mx-2">25</span> x <span class="text-red-500 text-4xl mx-2">40</span></h2>
+            
+            <div class="cute-box p-6 w-full bg-white text-left text-3xl leading-[1.8] border-b-[8px] shadow-indigo-300 mb-4 border-indigo-400">
+                <span id="m6-actor" class="font-black text-purple-600 bg-purple-50 px-3 py-1 rounded-xl border-2 border-purple-200">___</span> ซื้อ 
+                <span id="m6-item" class="font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-xl border-2 border-blue-200">___</span> จำนวน 
+                <span class="font-black text-red-500 text-[3rem] mx-2">25</span> 
+                <span id="m6-container1" class="font-black text-orange-500 underline decoration-dashed decoration-orange-300">___</span> <br>
+                แต่ละ<span id="m6-container2" class="font-black text-orange-500">___</span> มี 
+                <span class="font-black text-red-500 text-[3rem] mx-2">40</span> 
+                <span id="m6-class1" class="font-black text-green-600 underline decoration-dashed decoration-green-300">___</span> <br>
+                <div class="mt-3 pt-3 border-t-[4px] border-dotted border-gray-300">
+                    ❓ <span id="m6-actor2">เขา</span> มี<span id="m6-item2">ของ</span>ทั้งหมดกี่<span id="m6-class2" class="underline decoration-pink-300">___</span>?
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 w-full">
+                <div class="bg-purple-50 p-4 rounded-3xl border-4 border-purple-200 shadow-sm">
+                    <h3 class="text-xl font-black text-purple-500 mb-2 text-center">1. ใคร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(6, 'actor', 'พี่ชาย', null, this)" class="btn-m6-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👦 พี่ชาย</button>
+                        <button onclick="setM(6, 'actor', 'อา', null, this)" class="btn-m6-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👱‍♂️ อา</button>
+                        <button onclick="setM(6, 'actor', 'ป้า', null, this)" class="btn-m6-actor choice-btn bg-white py-2 rounded-2xl border-2 border-purple-300 text-xl font-bold">👩‍🦱 ป้า</button>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-3xl border-4 border-blue-200 shadow-sm">
+                    <h3 class="text-xl font-black text-blue-500 mb-2 text-center">2. ซื้ออะไร?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(6, 'item', 'ไอศกรีม', 'แท่ง', this)" class="btn-m6-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🍦 ไอศกรีม</button>
+                        <button onclick="setM(6, 'item', 'คัพเค้ก', 'ชิ้น', this)" class="btn-m6-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🧁 คัพเค้ก</button>
+                        <button onclick="setM(6, 'item', 'นมกล่อง', 'กล่อง', this)" class="btn-m6-item choice-btn bg-white py-2 rounded-2xl border-2 border-blue-300 text-xl font-bold">🧃 นมกล่อง</button>
+                    </div>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-3xl border-4 border-orange-200 shadow-sm">
+                    <h3 class="text-xl font-black text-orange-500 mb-2 text-center">3. ใส่ในไหน?</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="setM(6, 'container', 'กล่อง', null, this)" class="btn-m6-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">📦 กล่อง</button>
+                        <button onclick="setM(6, 'container', 'ถุง', null, this)" class="btn-m6-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🛍️ ถุง</button>
+                        <button onclick="setM(6, 'container', 'แพ็ค', null, this)" class="btn-m6-container choice-btn bg-white py-2 rounded-2xl border-2 border-orange-300 text-xl font-bold">🧊 แพ็ค</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= จบเกม ================= -->
+
+        <!-- สไลด์ 13: เตรียมตัวทำใบงาน -->
+        <div class="slide flex-col items-center justify-center w-full max-w-6xl mx-auto px-4" id="slide-13">
+            <div class="text-[8rem] floating-slow mb-4">📝</div>
+            <h2 class="text-6xl font-black text-blue-600 mb-6 bg-white px-12 py-5 rounded-[3rem] border-[8px] border-blue-400 shadow-xl">ถึงตาคนเก่งลงมือทำแล้ว!</h2>
+            <div class="cute-box border-green-400 p-8 max-w-3xl bg-green-50 shadow-md border-b-[8px] shadow-green-300 text-center">
+                <p class="text-4xl font-bold text-gray-700 leading-relaxed">
+                    นำตัวเลขในใบงานของตัวเอง <br>มาสร้างเป็นเรื่องราวสนุกๆ ได้เลย! <br>
+                    <span class="text-2xl text-green-600 mt-4 block">(เปิดหน้าต่อไป จะเป็นคลังคำศัพท์ให้ดูเป็นตัวอย่างนะ)</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- สไลด์ 14: คลังคำศัพท์ (No Scroll) -->
+        <div class="slide flex-col items-center justify-center w-full max-w-[1300px] mx-auto px-2" id="slide-14">
+            <h2 class="text-[2.2rem] font-black text-white bg-gradient-to-r from-pink-500 to-rose-500 inline-block px-10 py-2 rounded-[2rem] border-4 border-white shadow-lg mb-3">
+                💎 คลังคำศัพท์มหาสมบัติ 💎
+            </h2>
+            
+            <div class="grid grid-cols-2 gap-5 w-full">
+                <!-- ฝั่งซ้าย: คน / ภาชนะ / คำถาม -->
+                <div class="flex flex-col gap-4">
+                    <div class="bg-blue-50 border-[4px] border-blue-200 rounded-[2rem] p-4 shadow-sm border-b-[6px]">
+                        <h3 class="text-2xl font-black text-blue-600 mb-2 border-b-2 border-blue-200 pb-1 flex items-center gap-2">👤 ใครดี? (บุคคล)</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-blue-100 shadow-sm">ฉัน</span>
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-blue-100 shadow-sm">พ่อ / แม่</span>
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-blue-100 shadow-sm">ปู่ / ย่า / ตา / ยาย</span>
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-blue-100 shadow-sm">ครู / เพื่อน / พี่น้อง</span>
+                        </div>
+                    </div>
+                    <div class="bg-orange-50 border-[4px] border-orange-200 rounded-[2rem] p-4 shadow-sm border-b-[6px]">
+                        <h3 class="text-2xl font-black text-orange-600 mb-2 border-b-2 border-orange-200 pb-1 flex items-center gap-2">📦 ใส่ในไหนดี? (ภาชนะ)</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-orange-100 shadow-sm">กล่อง</span>
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-orange-100 shadow-sm">ถุง</span>
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-orange-100 shadow-sm">แพ็ค / ห่อ</span>
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-orange-100 shadow-sm">โหล / ตะกร้า</span>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 border-[4px] border-green-200 rounded-[2rem] p-4 shadow-sm border-b-[6px]">
+                        <h3 class="text-2xl font-black text-green-600 mb-2 border-b-2 border-green-200 pb-1 flex items-center gap-2">❓ คำเชื่อม / คำถาม</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-green-100 shadow-sm">กี่...?</span>
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-green-100 shadow-sm">ทั้งหมด</span>
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-green-100 shadow-sm">เท่าไร?</span>
+                            <span class="bg-white px-4 py-1.5 rounded-xl font-bold text-xl border-2 border-green-100 shadow-sm">รวมเป็น</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ฝั่งขวา: สิ่งของ + ลักษณะนาม -->
+                <div class="bg-pink-50 border-[4px] border-pink-200 rounded-[2rem] p-4 shadow-sm flex flex-col border-b-[6px]">
+                    <h3 class="text-2xl font-black text-pink-600 mb-3 border-b-2 border-pink-200 pb-1 flex items-center gap-2">🍎 ซื้ออะไรดี? (สิ่งของ) <span class="text-lg text-pink-400 font-normal ml-2">พร้อมลักษณะนาม</span></h3>
+                    <div class="grid grid-cols-2 gap-3 flex-1 content-start">
+                        <div class="bg-white p-3 rounded-2xl border-2 border-pink-100 shadow-sm flex flex-col items-center justify-center text-center">
+                            <span class="font-bold text-xl text-gray-700">ขนม / ลูกอม</span><span class="text-pink-500 text-sm">(ชิ้น, ห่อ, เม็ด)</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-2xl border-2 border-pink-100 shadow-sm flex flex-col items-center justify-center text-center">
+                            <span class="font-bold text-xl text-gray-700">นม / น้ำผลไม้</span><span class="text-pink-500 text-sm">(กล่อง, ขวด)</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-2xl border-2 border-pink-100 shadow-sm flex flex-col items-center justify-center text-center">
+                            <span class="font-bold text-xl text-gray-700">ดินสอ / ปากกา</span><span class="text-pink-500 text-sm">(แท่ง, ด้าม)</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-2xl border-2 border-pink-100 shadow-sm flex flex-col items-center justify-center text-center">
+                            <span class="font-bold text-xl text-gray-700">สมุด / หนังสือ</span><span class="text-pink-500 text-sm">(เล่ม)</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-2xl border-2 border-pink-100 shadow-sm flex flex-col items-center justify-center text-center">
+                            <span class="font-bold text-xl text-gray-700">แอปเปิล / ส้ม</span><span class="text-pink-500 text-sm">(ผล, ลูก)</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-2xl border-2 border-pink-100 shadow-sm flex flex-col items-center justify-center text-center">
+                            <span class="font-bold text-xl text-gray-700">ไอศกรีม / เค้ก</span><span class="text-pink-500 text-sm">(แท่ง, ถ้วย, ชิ้น)</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-2xl border-2 border-pink-100 shadow-sm flex flex-col items-center justify-center text-center">
+                            <span class="font-bold text-xl text-gray-700">ยางลบ</span><span class="text-pink-500 text-sm">(ก้อน)</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-2xl border-2 border-pink-100 shadow-sm flex flex-col items-center justify-center text-center">
+                            <span class="font-bold text-xl text-gray-700">ของเล่น</span><span class="text-pink-500 text-sm">(ชิ้น, อัน)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- แคปซูลปุ่มกดลอยตัว (Floating Menu) -->
+    <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-md px-6 py-2 rounded-[2rem] shadow-[0_10px_25px_rgba(0,0,0,0.15)] border-4 border-pink-300 flex items-center gap-6 z-50">
+        <button id="prev-btn" onclick="changeSlide(-1)" class="text-xl font-bold text-gray-400 hover:text-pink-500 transition-colors flex items-center gap-2 px-3 py-2 opacity-50 cursor-default">
+            <span class="text-2xl">◀️</span> กลับ
+        </button>
+        <div id="dots" class="flex gap-1.5"></div>
+        <button id="next-btn" onclick="changeSlide(1)" class="text-xl font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-2 px-3 py-2">
+            ถัดไป <span class="text-2xl">▶️</span>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 15; // มีทั้งหมด 15 สไลด์แล้ว (0 ถึง 14)
+
+        const dotsContainer = document.getElementById("dots");
+        for(let i=0; i<totalSlides; i++) {
+            dotsContainer.innerHTML += `<div class="h-2 w-2 rounded-full transition-all duration-300 ${i===0 ? 'bg-pink-500 scale-150' : 'bg-gray-300'}" id="dot-${i}"></div>`;
+        }
+
+        function changeSlide(direction) {
+            const prevSlide = currentSlide;
+            currentSlide += direction;
+            
+            if(currentSlide < 0) currentSlide = 0;
+            if(currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+
+            if(prevSlide !== currentSlide) {
+                document.getElementById(`slide-${prevSlide}`).classList.remove('active');
+                document.getElementById(`dot-${prevSlide}`).classList.replace('bg-pink-500', 'bg-gray-300');
+                document.getElementById(`dot-${prevSlide}`).classList.remove('scale-150');
+                
+                document.getElementById(`slide-${currentSlide}`).classList.add('active');
+                document.getElementById(`dot-${currentSlide}`).classList.replace('bg-gray-300', 'bg-pink-500');
+                document.getElementById(`dot-${currentSlide}`).classList.add('scale-150');
+
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                
+                if (currentSlide === 0) {
+                    prevBtn.style.opacity = "0.4"; prevBtn.style.cursor = "default"; prevBtn.classList.remove("hover:text-pink-500");
+                } else {
+                    prevBtn.style.opacity = "1"; prevBtn.style.cursor = "pointer"; prevBtn.classList.add("hover:text-pink-500");
+                }
+                
+                if (currentSlide === totalSlides - 1) {
+                    nextBtn.style.opacity = "0.4"; nextBtn.style.cursor = "default"; nextBtn.classList.remove("hover:text-blue-800");
+                } else {
+                    nextBtn.style.opacity = "1"; nextBtn.style.cursor = "pointer"; nextBtn.classList.add("hover:text-blue-800");
+                }
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); changeSlide(1); }
+            if(e.key === "ArrowLeft") { e.preventDefault(); changeSlide(-1); }
+        });
+
+        // ฟังก์ชันรับพารามิเตอร์ของแต่ละด่าน 1-6
+        function setM(m, type, val, classifier, el) {
+            document.querySelectorAll(`.btn-m${m}-${type}`).forEach(btn => btn.classList.remove('selected'));
+            el.classList.add('selected');
+            
+            if(type === 'actor') {
+                document.getElementById(`m${m}-actor`).innerText = val;
+                document.getElementById(`m${m}-actor2`).innerText = val;
+            } else if(type === 'item') {
+                document.getElementById(`m${m}-item`).innerText = val;
+                document.getElementById(`m${m}-item2`).innerText = val;
+                document.getElementById(`m${m}-class1`).innerText = classifier;
+                document.getElementById(`m${m}-class2`).innerText = classifier;
+            } else if(type === 'container') {
+                document.getElementById(`m${m}-container1`).innerText = val;
+                document.getElementById(`m${m}-container2`).innerText = val;
+            }
+        }
+    </script>
+</body>
+</html>
